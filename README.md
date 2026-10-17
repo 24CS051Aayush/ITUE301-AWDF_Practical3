@@ -1,5 +1,5 @@
 # ITUE301 - Advanced Web Development Frameworks
-## Practical 2: State Management and Routing in React
+## Practical 3: API Integration and Data Rendering in React
 
 ### Student Details
 - **Student ID:** 24CS051
@@ -12,35 +12,35 @@
 ---
 
 ### Aim
-To implement reactive state management using `useState` and multi-page single-page application (SPA) navigation using `React Router v6` in the existing student portfolio project.
+To consume a public REST API in React using the `fetch` API, execute network requests on component mount using `useEffect`, and handle all asynchronous states (loading, error, and success) with appropriate user feedback.
 
 ---
 
-### Application Architecture & Routes
+### Application Architecture
 ```text
-App.jsx (wrapped in <BrowserRouter> inside main.jsx)
- ├── NavBar.jsx         (Links to all routes using <NavLink>, dark/light mode toggle)
- ├── Route: "/"         → Home.jsx (composes Header, Overview toggle, About, Skills)
- ├── Route: "/projects" → Projects.jsx (lists connected full-stack coursework modules)
- ├── Route: "/contact"  → Contact.jsx (controlled form with useState, live preview & char count)
- └── Route: "*"         → NotFound.jsx (custom 404 page for unknown routes)
+Projects.jsx
+ ├── useEffect()                → triggers fetch on component mount with dependency array []
+ ├── useState                   → repos (data), loading, error, searchQuery, simulateError
+ ├── [loading == true]          → <Spinner />
+ ├── [error != null]            → <ErrorMessage message={error} onRetry={fetchRepositories} />
+ └── [success]                  → <RepoList data={filteredRepos} />
+      ├── Search & Filter Input → Dynamic query filtering by repository name
+      ├── Star Count Badge      → Displays repository stargazers count
+      ├── Language Tag & Link   → Direct link to GitHub repository
+      └── Simulate Error Toggle → Interactive testing of error state and retry mechanism
 ```
 
 ---
 
-### Key Features Implemented
-1. **Client-Side Routing with React Router v6**:
-   - Integrated `<BrowserRouter>`, `<Routes>`, `<Route>`, and `<NavLink>`.
-   - Prevents full-page browser reloads, providing seamless single-page application experience.
-   - Distinct active route indicator on navigation items.
-2. **Reactive State Management (`useState`)**:
-   - **Form Input State**: Controlled component inputs for name, email, subject, and message.
-   - **Real-Time Input Preview**: Live reflection of user typing without form submission.
-   - **Live Character Counter**: Dynamic character counter tracking length and limits.
-   - **UI Visibility Toggles**: Interactive help/guidelines tooltip and coursework overview toggle.
-   - **Global Theme State**: Light / Dark mode toggle affecting root container.
-3. **404 Not Found Handling**:
-   - Wildcard catch-all route (`*`) rendering a custom `NotFound` error view with navigation back to Home.
+### API Details & Endpoints
+- **Public REST API:** GitHub REST API v3
+- **Primary Endpoint:** `https://api.github.com/users/24CS051Aayush/repos?sort=updated&per_page=30`
+- **Authentication:** Unauthenticated public rate limit (60 requests/hour)
+- **Features Tested:**
+  1. **Loading State:** CSS animated circular spinner displayed while promise is pending.
+  2. **Success State:** Dynamic mapping of live repositories with name, star count, language badge, and external links.
+  3. **Error State & Recovery:** Try/catch error boundary with a live **"Simulate Error State"** toggle and a **"Retry API Request"** button.
+  4. **Search Filter:** Real-time client-side filtering by repository title/description.
 
 ---
 
@@ -53,8 +53,8 @@ App.jsx (wrapped in <BrowserRouter> inside main.jsx)
 #### Installation & Execution
 ```bash
 # 1. Clone repository
-git clone https://github.com/24CS051Aayush/ITUE301-AWDF_Practical2.git
-cd ITUE301-AWDF_Practical2
+git clone https://github.com/24CS051Aayush/ITUE301-AWDF_Practical3.git
+cd ITUE301-AWDF_Practical3
 
 # 2. Install dependencies
 npm install
@@ -63,4 +63,5 @@ npm install
 npm run dev
 ```
 
-App runs by default at `http://localhost:5173`.
+The application runs at `http://localhost:5173`.
+Navigate to `/projects` to view the live GitHub API integration.
